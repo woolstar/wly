@@ -17,6 +17,8 @@ struct buffer {
 
     constexpr buffer(uint8_t * begin, uint8_t * end) noexcept
         : begin_(begin), end_(end), curr_(begin) {}
+    constexpr buffer(char * begin, char * end) noexcept
+        : begin_(ptr(begin)), end_(ptr(end)), curr_(begin_) {}
 
     constexpr buffer(buffer const & other) noexcept
         : begin_(other.begin_), end_(other.end_), curr_(other.curr_) {}
@@ -28,15 +30,21 @@ struct buffer {
         return *this;
     }
 
-    constexpr buffer(uint8_t * data, size_t size) noexcept
-        : begin_(data), end_(data + size), curr_(data) {}
-
-    buffer(char* data) noexcept
-        : buffer((uint8_t *) data, strlen(data)) {}
+    constexpr buffer(uint8_t * adata, size_t asize) noexcept
+        : begin_(adata), end_(adata + asize), curr_(adata) {}
+    template <typename T>
+    constexpr buffer(T * adata, size_t asize) noexcept
+        : begin_(ptr<T>(adata)), end_(begin_ + asize), curr_(begin_) {}
 
     template <size_t N>
-    buffer(char (&data)[N]) noexcept
-        : buffer( (uint8_t *) data, N-1 ) { }
+    constexpr buffer(uint8_t (& adata)[N]) noexcept
+        : buffer( adata, N ) { }
+    template <size_t N>
+    constexpr buffer(char (& adata)[N]) noexcept
+        : buffer( ptr( adata ), N ) { }
+
+    template <typename T>
+    static constexpr uint8_t *  ptr( T * aptr ) { return reinterpret_cast<uint8_t*>(aptr) ; }
 };
 
 } // namespace wly

@@ -6,6 +6,11 @@ using namespace ::testing ;
 namespace wly
 {
 
+namespace
+{
+
+}
+
 TEST( buffer, usage )
 {
     char  tmp[8] ;
@@ -34,6 +39,21 @@ TEST( buffer, copy )
 
     buffer  testcopy( test ) ;
     EXPECT_EQ( * testcopy.curr_, 'c' ) ;
+}
+
+TEST( buffer, size )
+{
+    char tmp[8] ;
+    uint8_t tmpu[8] ;
+
+    {
+      buffer test( tmp ) ;
+      EXPECT_EQ( test.end_ - test.begin_, sizeof( tmp )) ;
+    }
+    {
+      buffer test( tmpu ) ;
+      EXPECT_EQ( test.end_ - test.begin_, sizeof( tmpu )) ;
+    }
 }
 
 } 
