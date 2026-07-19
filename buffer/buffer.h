@@ -17,12 +17,15 @@ struct buffer {
 
     constexpr buffer(uint8_t * begin, uint8_t * end) noexcept
         : begin_(begin), end_(end), curr_(begin) {}
-    constexpr buffer(char * begin, char * end) noexcept
+    constexpr buffer(uint8_t * begin, uint8_t * end, uint8_t * cur) noexcept
+        : begin_(begin), end_(end), curr_(cur) {}
+
+    template <typename T>
+    constexpr buffer(T * begin, T * end) noexcept
         : begin_(ptr(begin)), end_(ptr(end)), curr_(begin_) {}
 
     constexpr buffer(buffer const & other) noexcept
         : begin_(other.begin_), end_(other.end_), curr_(other.curr_) {}
-
     constexpr buffer & operator=(buffer const & other) noexcept {
         begin_ = other.begin_;
         end_ = other.end_;
@@ -45,6 +48,10 @@ struct buffer {
 
     template <typename T>
     static constexpr uint8_t *  ptr( T * aptr ) { return reinterpret_cast<uint8_t*>(aptr) ; }
+
+    void  full() { curr_ = end_ ; }
+
+    static buffer all( const buffer & src ) { return buffer( src.begin_, src.end_, src.end_ ) ; }
 };
 
 } // namespace wly

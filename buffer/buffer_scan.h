@@ -8,7 +8,7 @@
 
 namespace wly {
 
-struct scan_buffer : public virtual buffer {
+struct buffer_scan : public virtual buffer {
     struct iterator {
         using iterator_category = std::forward_iterator_tag ;
         using value_type = uint8_t ;
@@ -60,13 +60,10 @@ struct scan_buffer : public virtual buffer {
     const_iterator begin() const noexcept { return const_iterator(begin_) ; }
     const_iterator end() const noexcept { return const_iterator(curr_) ; }
 
-    scan_buffer() noexcept : buffer() {}
+    buffer_scan() noexcept : buffer() {}
+    buffer_scan( const buffer & src ) : buffer( src ) {}
 
-    scan_buffer(uint8_t * begin, uint8_t * end) noexcept
-        : buffer(begin, end) {}
-
-    scan_buffer(uint8_t * data, size_t size) noexcept
-        : buffer(data, size) {}
+    using buffer::buffer ;
 } ;
 
 } // namespace wly
